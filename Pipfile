@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+mypy = "*"
+pyflakes = "*"
+pytest = "*"
+pytest-datadir = "*"
+pytest-cov = "*"
+pytest-eradicate = "*"
+pytest-html = "*"
+pytest-mock = "*"
+pytest-asyncio = "*"
+pytest-faker = "*"
+pytest-print = "*"
+
+[packages]
+fastapi = {extras = ["all"], version = "*"}
+uvicorn = "*"
+loguru = "*"
+ujson = "*"
+atomic = "*"
+pickledb = "*"
+
+[requires]
+python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
