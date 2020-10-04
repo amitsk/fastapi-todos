@@ -1,10 +1,5 @@
 from fastapi import FastAPI
+from fastapi_todos.todos.routers import router as todos_router
 
 app = FastAPI()
-
-# http://taco-randomizer.herokuapp.com/random/
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World!"}
+app.include_router(todos_router, prefix="/todos", tags=["todos"])

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class TodoItem(BaseModel):
-    id: int
+    todo_id: Optional[int] = None
     name: str
     description: Optional[str] = None
     completed: bool

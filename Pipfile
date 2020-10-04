@@ -21,12 +21,14 @@ pytest-print = "*"
 fastapi = {extras = ["all"], version = "*"}
 uvicorn = "*"
 loguru = "*"
-ujson = "*"
-atomic = "*"
-pickledb = "*"
+tinydb = "*"
+
 
 [requires]
 python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
+
+[scripts]
+test="env PYTHONPATH=.:$PYTHONPATH pytest tests/"
