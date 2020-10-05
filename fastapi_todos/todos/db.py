@@ -1,5 +1,5 @@
 from os import name
-from fastapi_todos.todos.models import TodoItem
+from fastapi_todos.todos.models import TodoItem, TodoItemIn
 from typing import Dict, Optional
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
@@ -28,7 +28,7 @@ class TodoDB:
             )
         return None
 
-    async def add_todo(self, todo_item: TodoItem) -> Optional[TodoItem]:
+    async def add_todo(self, todo_item: TodoItemIn) -> Optional[TodoItem]:
         new_todo = todo_item.copy()
         new_id = self._db.insert(new_todo.dict())
         new_todo = TodoItem(

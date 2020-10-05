@@ -1,4 +1,4 @@
-from fastapi_todos.todos.models import TodoItem
+from fastapi_todos.todos.models import TodoItem, TodoItemIn
 from fastapi_todos.todos.db import TodoDB
 import pytest
 
@@ -10,7 +10,7 @@ async def test_db_operations():
     """
     todo_db = TodoDB()
 
-    todo_item = TodoItem(name="test", description="Todo Item Test", completed=False)
+    todo_item = TodoItemIn(name="test", description="Todo Item Test", completed=False)
 
     new_todo = await todo_db.add_todo(todo_item)
     assert new_todo == TodoItem(
@@ -25,7 +25,10 @@ async def test_db_operations():
     stored_todo = await todo_db.update_todo(
         stored_todo.todo_id,
         TodoItem(
-            name=stored_todo.name, description=stored_todo.description, completed=True
+            todo_id=stored_todo.todo_id,
+            name=stored_todo.name,
+            description=stored_todo.description,
+            completed=True,
         ),
     )
 

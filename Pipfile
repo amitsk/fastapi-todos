@@ -22,7 +22,7 @@ fastapi = {extras = ["all"], version = "*"}
 uvicorn = "*"
 loguru = "*"
 tinydb = "*"
-
+aiohttp = {extras = ["speedups"], version = "*"}
 
 [requires]
 python_version = "3.8"
@@ -31,4 +31,4 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-test="env PYTHONPATH=.:$PYTHONPATH pytest tests/"
+test="env PYTHONPATH=.:$PYTHONPATH pytest tests/ --print"

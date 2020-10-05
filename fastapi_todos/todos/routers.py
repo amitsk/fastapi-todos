@@ -1,19 +1,25 @@
 from typing import Awaitable, Coroutine
 
-from fastapi.responses import ORJSONResponse as JSONResponse
+from fastapi.responses import ORJSONResponse
 from fastapi_todos.todos.db import TodoDB
 from fastapi import APIRouter, Response, status
-from .models import TodoItem
+from .models import TodoItemIn, TodoItem
 
 router = APIRouter()
 db = TodoDB()
 
-not_found_response = JSONResponse(
+not_found_response = ORJSONResponse(
     status_code=404, content={"message": "Item not found"}
 )
 
 
-@router.get("/{todo_id}", tags=["todos"], status_code=status.HTTP_200_OK)
+@router.get(
+    "/{todo_id}",
+    tags=["todos"],
+    status_code=status.HTTP_200_OK,
+    response_model=TodoItem,
+    response_class=ORJSONResponse,
+)
 async def get_todo(todo_id: int, response: Response):
     todo_item = await db.find_todo(todo_id=todo_id)
     if not todo_item:
@@ -22,12 +28,23 @@ async def get_todo(todo_id: int, response: Response):
         return todo_item
 
 
-@router.post("/", tags=["todos"], status_code=status.HTTP_201_CREATED)
-async def create_todo(item: TodoItem):
+@router.post(
+    "/",
+    tags=["todos"],
+    status_code=status.HTTP_201_CREATED,
+    response_model=TodoItem,
+    response_class=ORJSONResponse,
+)
+async def create_todo(item: TodoItemIn):
     return await db.add_todo(item)
 
 
-@router.put("/{todo_id}", tags=["todos"], status_code=status.HTTP_200_OK)
+@router.put(
+    "/{todo_id}",
+    tags=["todos"],
+    status_code=status.HTTP_200_OK,
+    response_class=ORJSONResponse,
+)
 async def update_todo(todo_id: int, item: TodoItem, response: Response):
     todo_item = await db.update_todo(todo_id, item)
     if not todo_item:
