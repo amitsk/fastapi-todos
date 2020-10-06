@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 from pydantic import BaseModel
 
 #
@@ -24,7 +24,7 @@ class Book(BaseModel):
     subtitle: str
     url: str
     title: str
-    identifiers: List[Dict[str, str]]
+    identifiers: Dict[str, Any]
     publishers: List[Publisher]
     authors: List[Author]
     subjects: List[Subject]

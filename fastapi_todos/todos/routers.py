@@ -5,15 +5,15 @@ from fastapi_todos.todos.db import TodoDB
 from fastapi import APIRouter, Response, status
 from .models import TodoItemIn, TodoItem
 
-router = APIRouter()
+todos_router = APIRouter()
 db = TodoDB()
 
 not_found_response = ORJSONResponse(
-    status_code=404, content={"message": "Item not found"}
+    status_code=404, content={"message": "TODO not found"}
 )
 
 
-@router.get(
+@todos_router.get(
     "/{todo_id}",
     tags=["todos"],
     status_code=status.HTTP_200_OK,
@@ -28,7 +28,7 @@ async def get_todo(todo_id: int, response: Response):
         return todo_item
 
 
-@router.post(
+@todos_router.post(
     "/",
     tags=["todos"],
     status_code=status.HTTP_201_CREATED,
@@ -39,7 +39,7 @@ async def create_todo(item: TodoItemIn):
     return await db.add_todo(item)
 
 
-@router.put(
+@todos_router.put(
     "/{todo_id}",
     tags=["todos"],
     status_code=status.HTTP_200_OK,
@@ -53,7 +53,9 @@ async def update_todo(todo_id: int, item: TodoItem, response: Response):
         return todo_item
 
 
-@router.delete("/{todo_id}", tags=["todos"], status_code=status.HTTP_204_NO_CONTENT)
+@todos_router.delete(
+    "/{todo_id}", tags=["todos"], status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_todo(todo_id: int, response: Response):
     todo_item_id = await db.remove_todo(todo_id)
     if not todo_item_id:
