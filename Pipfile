@@ -16,6 +16,7 @@ pytest-mock = "*"
 pytest-asyncio = "*"
 pytest-faker = "*"
 pytest-print = "*"
+bandit = "*"
 
 [packages]
 fastapi = {extras = ["all"], version = "*"}
