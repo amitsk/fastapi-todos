@@ -20,7 +20,6 @@ class Subject(BaseModel):
 
 class Book(BaseModel):
     isbn: str
-    publish_date: str
     subtitle: str
     url: str
     title: str

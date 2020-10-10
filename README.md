@@ -16,8 +16,8 @@ It uses
 - Install Python3.x
 - Install pipenv https://pipenv.pypa.io/en/latest/
 - Clone from github
-- Run `pipenv sync --dev && pipenv shell`
-- Tests can be run with `pipenv run test`
+- Build - Install, test, lint `make build`
+- Tests can be run with `make test`
 
 ## Running APIs
 

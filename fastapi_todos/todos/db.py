@@ -1,9 +1,8 @@
-from os import name
+from typing import Optional
 from fastapi_todos.todos.models import TodoItem, TodoItemIn
-from typing import Dict, Optional
+
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
-from loguru import logger
 
 
 # name: str

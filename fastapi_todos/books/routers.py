@@ -1,9 +1,8 @@
-from loguru import logger
 from fastapi import APIRouter, Response, status
 
 from fastapi.responses import ORJSONResponse
 
-from fastapi import APIRouter, Response, status
+
 from .models import Book
 from .api import BooksApi
 

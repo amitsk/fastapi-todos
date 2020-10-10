@@ -1,0 +1,33 @@
+rule infer
+  command = /home/amit/.local/share/virtualenvs/fastapi-todos-9tO2mBnW/bin/python -m pytype.single --imports_info $imports --module-name $module -V 3.8 -o $out --no-report-errors --nofail --quick $in
+  description = infer $module
+rule check
+  command = /home/amit/.local/share/virtualenvs/fastapi-todos-9tO2mBnW/bin/python -m pytype.single --imports_info $imports --module-name $module -V 3.8 -o $out --analyze-annotated --nofail --quick $in
+  description = check $module
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/models.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/books/models.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/books.models.imports
+  module = books.models
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/api.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/books/api.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/books.api.imports
+  module = books.api
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/routers.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/books/routers.py | /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/models.pyi /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/api.pyi
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/books.routers.imports
+  module = books.routers
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/todos/__init__.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/todos/__init__.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/todos.__init__.imports
+  module = todos.__init__
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/todos/models.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/todos/models.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/todos.models.imports
+  module = todos.models
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/todos/routers.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/todos/routers.py | /home/amit/projects/python3/fastapi-todos/.pytype/pyi/todos/models.pyi
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/todos.routers.imports
+  module = todos.routers
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/main.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/main.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/main.imports
+  module = main
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/todos/db.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/todos/db.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/todos.db.imports
+  module = todos.db
+build /home/amit/projects/python3/fastapi-todos/.pytype/pyi/books/__init__.pyi: check /home/amit/projects/python3/fastapi-todos/fastapi_todos/books/__init__.py
+  imports = /home/amit/projects/python3/fastapi-todos/.pytype/imports/books.__init__.imports
+  module = books.__init__

@@ -17,6 +17,7 @@ pytest-asyncio = "*"
 pytest-faker = "*"
 pytest-print = "*"
 bandit = "*"
+pytype = "*"
 
 [packages]
 fastapi = {extras = ["all"], version = "*"}
@@ -32,4 +33,4 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-test="env PYTHONPATH=.:$PYTHONPATH pytest tests/ --print"
+test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"

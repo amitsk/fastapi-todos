@@ -1,5 +1,3 @@
-from typing import Awaitable, Coroutine
-
 from fastapi.responses import ORJSONResponse
 from fastapi_todos.todos.db import TodoDB
 from fastapi import APIRouter, Response, status
