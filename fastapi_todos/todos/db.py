@@ -1,15 +1,16 @@
 from typing import Optional
-from fastapi_todos.todos.models import TodoItem, TodoItemIn
 
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
 
+from .models import TodoItem, TodoItemIn
+
 
 class TodoDB:
-    def __init__(self):
+    def __init__(self) -> None:
         self._db = TinyDB(storage=MemoryStorage)
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         self._db.close()
 
     async def find_todo(self, todo_id: int) -> Optional[TodoItem]:
@@ -25,8 +26,8 @@ class TodoDB:
         return None
 
     async def add_todo(self, todo_item: TodoItemIn) -> Optional[TodoItem]:
-        new_todo = todo_item.copy()
-        new_id = self._db.insert(new_todo.dict())
+        new_todo_in = todo_item.copy()
+        new_id = self._db.insert(new_todo_in.dict())
         new_todo = TodoItem(
             todo_id=new_id,
             name=todo_item.name,

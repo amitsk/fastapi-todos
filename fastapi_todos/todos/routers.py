@@ -1,7 +1,8 @@
-from fastapi.responses import ORJSONResponse
-from fastapi_todos.todos.db import TodoDB
 from fastapi import APIRouter, Response, status
-from .models import TodoItemIn, TodoItem
+from fastapi.responses import ORJSONResponse
+
+from .db import TodoDB
+from .models import TodoItem, TodoItemIn
 
 todos_router = APIRouter()
 db = TodoDB()

@@ -21,7 +21,7 @@ class BooksApi:
             timeout=BooksApi.books_timeout,
         )
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         self._http_session.close()
 
     async def fetch_book_details(self, isbn: str) -> Optional[Mapping[str, Any]]:
