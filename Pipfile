@@ -18,6 +18,7 @@ pytest-faker = "*"
 pytest-print = "*"
 bandit = "*"
 pytype = "*"
+pyre-check = "*"
 
 [packages]
 fastapi = {extras = ["all"], version = "*"}

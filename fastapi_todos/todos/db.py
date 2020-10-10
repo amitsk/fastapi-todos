@@ -5,9 +5,6 @@ from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
 
 
-# name: str
-#     description: Optional[str] = None
-#     completed: bool
 class TodoDB:
     def __init__(self):
         self._db = TinyDB(storage=MemoryStorage)

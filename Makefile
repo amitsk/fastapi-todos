@@ -36,10 +36,10 @@ lint: ## check style with flake8
 	pipenv run pytype  fastapi_todos/
 
 pytype:
-	pipenv run pytype  fastapi_todos/
+	pytype -d import-error fastapi_todos/
 
 mypy:
-	pipenv run mypy  fastapi_todos/
+	mypy  --namespace-packages fastapi_todos/
 
 
 test: ## run tests quickly with the default Python
