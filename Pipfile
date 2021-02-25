@@ -21,8 +21,11 @@ pytype = "*"
 pyre-check = "*"
 
 [packages]
-fastapi = {extras = ["all"], version = "*"}
-uvicorn = "*"
+fastapi = "*"
+orjson = "*"
+ujson = "*"
+requests = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
 tinydb = "*"
 aiohttp = {extras = ["speedups"], version = "*"}
