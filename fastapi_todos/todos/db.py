@@ -1,14 +1,15 @@
 from typing import Optional
 
 from tinydb import TinyDB
-from tinydb.storages import MemoryStorage
+from tinydb.storages import JSONStorage
+from tinydb.middlewares import CachingMiddleware
 
 from .models import TodoItem, TodoItemIn
 
 
 class TodoDB:
     def __init__(self) -> None:
-        self._db = TinyDB(storage=MemoryStorage)
+        self._db = TinyDB("db.json", storage=CachingMiddleware(JSONStorage))
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         self._db.close()

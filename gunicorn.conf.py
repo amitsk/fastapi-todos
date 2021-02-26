@@ -14,7 +14,7 @@ cores = multiprocessing.cpu_count()
 workers_per_core = float(workers_per_core_str)
 workers = int(workers_per_core * cores)
 
-accesslog_var = os.environ.get("ACCESS_LOG")
+accesslog_var = os.environ.get("ACCESS_LOG", "-")
 use_accesslog = accesslog_var or None
 errorlog_var = os.environ.get("ERROR_LOG", "-")
 use_errorlog = errorlog_var or None

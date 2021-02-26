@@ -39,7 +39,7 @@ EXPOSE ${PORT}
 COPY fastapi_todos  fastapi_todos/
 COPY start.sh .
 RUN chmod +x ./start.sh
-COPY gunicorn.conf.py   .
+COPY gunicorn.conf.py .
 USER appuser
 ENV PYTHONPATH=/home/appuser:$PYTHONPATH
-CMD ["/home/appuser/start.sh"]
+CMD ["./start.sh"]
