@@ -1,5 +1,6 @@
-FROM tiangolo/uvicorn-gunicorn:python3.8-slim  as base
+FROM python:3.8-slim  as base
 
+# https://sourcery.ai/blog/python-docker/
 
 # Setup env
 ENV LANG C.UTF-8
@@ -15,6 +16,7 @@ RUN pip install pipenv
 RUN apt-get update && apt-get install -y --no-install-recommends g++
 
 # Install python dependencies in /.venv
+# https://pipenv.pypa.io/en/latest/advanced/
 COPY Pipfile .
 COPY Pipfile.lock .
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
@@ -29,8 +31,15 @@ ENV PATH="/.venv/bin:$PATH"
 # Create and switch to a new user
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
-USER appuser
 
+ENV APP_MODULE="fastapi_todos.main:app"
+ENV PORT 8000
+EXPOSE ${PORT}
 # Install application into container
-COPY fastapi_todos  .
-
+COPY fastapi_todos  fastapi_todos/
+COPY start.sh .
+RUN chmod +x ./start.sh
+COPY gunicorn.conf.py   .
+USER appuser
+ENV PYTHONPATH=/home/appuser:$PYTHONPATH
+CMD ["/home/appuser/start.sh"]

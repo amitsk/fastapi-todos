@@ -10,7 +10,6 @@ pyflakes = "*"
 pytest = "*"
 pytest-datadir = "*"
 pytest-cov = "*"
-pytest-eradicate = "*"
 pytest-html = "*"
 pytest-mock = "*"
 pytest-asyncio = "*"
@@ -29,6 +28,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
 tinydb = "*"
 aiohttp = {extras = ["speedups"], version = "*"}
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
@@ -37,4 +37,4 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"
+test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print "
