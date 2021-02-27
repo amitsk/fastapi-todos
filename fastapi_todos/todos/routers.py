@@ -4,6 +4,8 @@ from fastapi.responses import ORJSONResponse
 from .db import TodoDB
 from .models import TodoItem, TodoItemIn
 
+from loguru import logger
+
 todos_router = APIRouter()
 db = TodoDB()
 
@@ -22,6 +24,7 @@ not_found_response = ORJSONResponse(
 async def get_todo(todo_id: int, response: Response):
     todo_item = await db.find_todo(todo_id=todo_id)
     if not todo_item:
+        logger.warning(" Todo item Not found {}", todo_id)
         return not_found_response
     else:
         return todo_item
@@ -35,6 +38,7 @@ async def get_todo(todo_id: int, response: Response):
     response_class=ORJSONResponse,
 )
 async def create_todo(item: TodoItemIn):
+    logger.info(" Creating Todo  ")
     return await db.add_todo(item)
 
 
@@ -47,8 +51,10 @@ async def create_todo(item: TodoItemIn):
 async def update_todo(todo_id: int, item: TodoItem, response: Response):
     todo_item = await db.update_todo(todo_id, item)
     if not todo_item:
+        logger.warning(" Not found Todo {} ", todo_id)
         return not_found_response
     else:
+        logger.info(" Updating Todo  {}", todo_id)
         return todo_item
 
 
