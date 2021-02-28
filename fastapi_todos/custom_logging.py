@@ -1,12 +1,12 @@
-# https://medium.com/1mgofficial/how-to-override-uvicorn-logger-in-fastapi-using-loguru-124133cdcd4e
-
 # Custom Logger Using Loguru
+# https://loguru.readthedocs.io/en/stable/api/logger.html
 
 
 import json
 import logging
 import sys
 from loguru import logger
+import os
 
 
 class InterceptHandler(logging.Handler):
@@ -28,8 +28,27 @@ class InterceptHandler(logging.Handler):
         )
 
 
+# https://loguru.readthedocs.io/en/stable/api/logger.html
 def serialize(record):
-    subset = {"timestamp": record["time"].timestamp(), "message": record["message"]}
+    subset = {
+        "timestamp": record["time"].isoformat(),
+        "level": record["level"].name,
+        "message": record["message"],
+        "elapsed_sec": record["elapsed"].total_seconds(),
+        "exception": record["exception"]
+        and {
+            "type": record["exception"].type.__name__,
+            "value": record["exception"].value,
+            "traceback": bool(record["exception"]),
+        },
+        "extra": record["extra"],
+        "file": {"name": record["file"]["name"], "path": record["file"]["path"]},
+        "function": record["function"],
+        "line": record["line"],
+        "name": record["name"],
+        "process": {"id": record["process"].id, "name": record["process"].name},
+        "thread": {"id": record["thread"].id, "name": record["thread"].name},
+    }
     return json.dumps(subset)
 
 
@@ -37,6 +56,9 @@ def format_record(record):
     # Note this function returns the string to be formatted, not the actual message to be logged
     record["extra"]["serialized"] = serialize(record)
     return "{extra[serialized]}\n"
+
+
+# https://gist.github.com/Slyfoxy/a3e31cfcc1b19cba8e1b626276148c49
 
 
 def init_logging():
@@ -62,7 +84,7 @@ def init_logging():
     loggers = (
         logging.getLogger(name)
         for name in logging.root.manager.loggerDict
-        if name.startswith("uvicorn.")
+        if name.startswith("uvicorn.") or name.startswith("gunicorn.")
     )
     for uvicorn_logger in loggers:
         uvicorn_logger.handlers = []
@@ -76,7 +98,7 @@ def init_logging():
         handlers=[
             {
                 "sink": sys.stdout,
-                "level": logging.DEBUG,
+                "level": os.environ.get("LOG_LEVEL", logging.DEBUG),
                 "format": format_record,
                 "enqueue": True,
             }

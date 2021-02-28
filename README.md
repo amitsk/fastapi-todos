@@ -28,3 +28,17 @@ It uses
 
 - todos : http://127.0.0.1:8000/todos => CRUD endpoints agaist In-Memory TinyDB
 - books : http://127.0.0.1:8000/books => Get a book's details by ISBN. Uses aiohttp to call OpenAPI
+
+## Running in Docker
+
+- Based off `python:3.8-slim`. Around 260MB image size
+- `docker build -t myimage . `
+- `docker run -p 8000:8000 myimage`
+
+## Configuration
+
+- `gunicorn.conf.py`
+
+## Json Logging using Loguru
+
+- `custom_logging.py`
