@@ -10,6 +10,7 @@ It uses
 - orjson https://github.com/ijl/orjson
 - uvicorn https://github.com/encode/uvicorn
 - TinyDB https://github.com/msiemens/tinydb
+- Gunicorn https://gunicorn.org/
 
 ## Building
 
