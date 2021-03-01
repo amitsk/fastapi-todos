@@ -33,8 +33,8 @@ It uses
 ## Running in Docker
 
 - Based off `python:3.8-slim`. Around 260MB image size
-- `docker build -t myimage . `
-- `docker run -p 8000:8000 myimage`
+- `docker build -t fastapi/todos . `
+- `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`
 
 ## Configuration
 
@@ -43,3 +43,15 @@ It uses
 ## Json Logging using Loguru
 
 - `custom_logging.py`
+
+## Kubernetes
+
+- Working installations of `minikube` and `kubectl`
+- In a terminal `eval $(minikube -p minikube docker-env)`
+- Build docker image
+- `minikube start`
+- Switch to `deployments/k8s`
+- `kubectl create -f deployments.yaml`
+- `kubectl create -f service.yaml`
+- URL = `minikube service --url fastapi-todos-svc`
+- Access the swagger console at <URL>/docs

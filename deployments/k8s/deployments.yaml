@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-todos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-todos
+  template:
+    metadata:
+      labels:
+        app: fastapi-todos
+    spec:
+      containers:
+        - name: fastapi-todos
+          image: fastapi/todos
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000

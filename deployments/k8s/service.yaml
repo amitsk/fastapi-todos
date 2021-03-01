@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-todos-svc
+  labels:
+    app: fastapi-todos
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      nodePort: 30008
+  selector:
+    app: fastapi-todos
