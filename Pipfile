@@ -27,7 +27,7 @@ requests = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
 tinydb = "*"
-aiohttp = {extras = ["speedups"], version = "*"}
+aiohttp = "*"
 gunicorn = "*"
 
 [requires]
