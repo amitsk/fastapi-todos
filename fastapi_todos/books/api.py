@@ -6,6 +6,8 @@ from httpx import Timeout
 # https://openlibrary.org/api/books?bibkeys=ISBN%3A0201558025&format=json&jscmd=data
 BASE_URL = "https://openlibrary.org/api/books"
 
+from loguru import logger
+
 
 class BooksApi:
     books_timeout = Timeout(timeout=10.0)
@@ -21,4 +23,5 @@ class BooksApi:
                     book["isbn"] = isbn
                     return book
 
+            logger.info(" No record found for ISBN {}", isbn)
             return None

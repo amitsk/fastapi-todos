@@ -42,7 +42,7 @@ def serialize(record):
             "traceback": bool(record["exception"]),
         },
         "extra": record["extra"],
-        "file": {"name": record["file"]["name"], "path": record["file"]["path"]},
+        "file": {"name": record["file"].name},
         "function": record["function"],
         "line": record["line"],
         "name": record["name"],
@@ -56,7 +56,6 @@ def format_record(record):
     # Note this function returns the string to be formatted, not the actual message to be logged
     record["extra"]["serialized"] = serialize(record)
     return "{extra[serialized]}\n"
-
 
 
 def init_logging():
