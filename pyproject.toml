@@ -1,0 +1,48 @@
+[tool]
+[tool.pdm]
+allow_prereleases = true
+
+[[tool.pdm.source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "black",
+    "mypy",
+    "pyflakes",
+    "pytest",
+    "pytest-datadir",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-mock",
+    "pytest-asyncio",
+    "pytest-faker",
+    "pytest-print",
+    "bandit",
+    "pytype",
+    "pyre-check",
+]
+
+[project]
+# PEP 621 project metadata
+# See https://www.python.org/dev/peps/pep-0621/
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "requests",
+    "uvicorn[standard]",
+    "loguru",
+    "tinydb",
+    "gunicorn",
+    "httpx[http2]",
+]
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+[tool.pdm.scripts]
+test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"
+app="uvicorn fastapi_todos.main:app --reload"

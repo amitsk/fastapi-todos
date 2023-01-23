@@ -13,14 +13,14 @@ It uses
 ## Building
 
 - Install Python3.x
-- Install pipenv https://pipenv.pypa.io/en/latest/
+- Install pdm https://pdm.fming.dev/latest/
 - Clone from github
 - Build - Install, test, lint `make build`
 - Tests can be run with `make test`
 
 ## Running APIs
 
-- After build is done run `uvicorn fastapi_todos.main:app --reload`
+- After build is done run `make run`
 - Navigate to http://127.0.0.1:8000/docs to view the Open API docs
 
 ## Endpoints
@@ -29,7 +29,7 @@ It uses
 - books : http://127.0.0.1:8000/books => Get a book's details by ISBN. Uses aiohttp to call OpenAPI
 
 ## Running in Docker
-
+**THIS IS BROKEN AFTER MOVE TO PDM - TBD**
 - Based off `python:3.8-slim`. Around 260MB image size
 - `docker build -t fastapi/todos . `
 - `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`

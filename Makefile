@@ -1,10 +1,12 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help
 .DEFAULT_GOAL := help
 
+PDM=pdm
+
 build: install test lint
 
 install: 
-	pipenv install --dev 
+	$(PDM) install -d
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -31,20 +33,22 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	pipenv run pyflakes fastapi_todos/ tests
-	pipenv run mypy  fastapi_todos/
-	pipenv run pytype  fastapi_todos/
+	$(PDM) run pyflakes fastapi_todos/ tests
+	$(PDM)  run mypy  fastapi_todos/
+	$(PDM)  run pytype  fastapi_todos/
 
 pytype:
-	pytype -d import-error fastapi_todos/
+	$(PDM)  -d import-error fastapi_todos/
 
 mypy:
-	mypy  --namespace-packages fastapi_todos/
+	$(PDM)   --namespace-packages fastapi_todos/
 
 
 test: ## run tests quickly with the default Python
-	pipenv run test
+	$(PDM)  run test
 
+app:
+	$(PDM) run app
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source {{ cookiecutter.project_module }} -m pytest

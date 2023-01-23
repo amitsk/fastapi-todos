@@ -1,4 +1,4 @@
-FROM python:3.8-slim  as base
+FROM python:3.11-slim  as base
 
 # https://sourcery.ai/blog/python-docker/
 
@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends g++
 
 # Install python dependencies in /.venv
 # https://pipenv.pypa.io/en/latest/advanced/
-COPY Pipfile .
-COPY Pipfile.lock .
+COPY Pipfile.donotuse .
+COPY Pipfile.lock.donotuse .
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 
