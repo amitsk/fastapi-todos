@@ -11,16 +11,22 @@ ENV PYTHONFAULTHANDLER 1
 
 FROM base AS python-deps
 
-# Install pipenv and compilation dependencies
-RUN pip install pipenv
-RUN apt-get update && apt-get install -y --no-install-recommends g++
+## Install pipenv and compilation dependencies
+#RUN pip install pipenv
+#RUN apt-get update && apt-get install -y --no-install-recommends g++
+# install PDM
+RUN pip install -U pip setuptools wheel
+RUN pip install pdm
 
+
+# copy files
+#COPY pyproject.toml pdm.lock README.md /project/
 # Install python dependencies in /.venv
 # https://pipenv.pypa.io/en/latest/advanced/
-COPY Pipfile.donotuse .
-COPY Pipfile.lock.donotuse .
-RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
-
+#COPY Pipfile.donotuse .
+#COPY Pipfile.lock.donotuse .
+#RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
+RUN make test
 
 FROM base AS runtime
 
