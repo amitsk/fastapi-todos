@@ -136,3 +136,5 @@ db.json
 **/*.pyi
 
 .pytype/**
+.vscode/
+.idea/

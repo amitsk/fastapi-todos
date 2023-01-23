@@ -6,7 +6,7 @@ from .books.routers import books_router
 
 # from loguru import logger
 
-init_logging()
+# init_logging()
 
 app = FastAPI()
 

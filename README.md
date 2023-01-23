@@ -6,8 +6,6 @@ It uses
 
 - Fast API - https://fastapi.tiangolo.com/
 - Pydantic - https://pydantic-docs.helpmanual.io/usage/models/
-- aiohttp https://docs.aiohttp.org/en/stable/
-- orjson https://github.com/ijl/orjson
 - uvicorn https://github.com/encode/uvicorn
 - TinyDB https://github.com/msiemens/tinydb
 - Gunicorn https://gunicorn.org/

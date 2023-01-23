@@ -58,8 +58,6 @@ def format_record(record):
     return "{extra[serialized]}\n"
 
 
-# https://gist.github.com/Slyfoxy/a3e31cfcc1b19cba8e1b626276148c49
-
 
 def init_logging():
     """
