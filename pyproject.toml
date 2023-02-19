@@ -10,19 +10,16 @@ verify_ssl = true
 [tool.pdm.dev-dependencies]
 dev = [
     "black",
-    "mypy",
-    "pyflakes",
     "pytest",
     "pytest-datadir",
     "pytest-cov",
     "pytest-html",
     "pytest-mock",
-    "pytest-asyncio",
     "pytest-faker",
     "pytest-print",
-    "bandit",
-    "pytype",
-    "pyre-check",
+    "mypy>=1.0.1",
+    "ruff",
+    "pytype>=2020.2.6",
 ]
 
 [project]
@@ -46,3 +43,44 @@ build-backend = "pdm.pep517.api"
 [tool.pdm.scripts]
 test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"
 app="uvicorn fastapi_todos.main:app --reload"
+
+[tool.ruff]
+# Enable Pyflakes `E` and `F` codes by default.
+select = ["A", "B","C4","COM", "DTZ","ISC","E", "F", "FBT", "N", "PIE", "S", "RET", "T20"]
+
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+
+unfixable = ["B"]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".mypy_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "venv",
+    "tests"
+]
+
+
+# Same as Black.
+line-length = 88
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402"]

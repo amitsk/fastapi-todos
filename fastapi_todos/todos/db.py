@@ -29,16 +29,17 @@ class TodoDB:
     async def add_todo(self, todo_item: TodoItemIn) -> Optional[TodoItem]:
         new_todo_in = todo_item.copy()
         new_id = self._db.insert(new_todo_in.dict())
-        new_todo = TodoItem(
+        return TodoItem(
             todo_id=new_id,
             name=todo_item.name,
             description=todo_item.description,
             completed=todo_item.completed,
         )
-        return new_todo
 
     async def update_todo(
-        self, todo_id: int, todo_item: TodoItem
+        self,
+        todo_id: int,
+        todo_item: TodoItem,
     ) -> Optional[TodoItem]:
         if self._db.contains(doc_id=todo_id):
             self._db.update(

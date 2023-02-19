@@ -20,7 +20,7 @@ It uses
 
 ## Running APIs
 
-- After build is done run `make run`
+- After build is done run `make app`
 - Navigate to http://127.0.0.1:8000/docs to view the Open API docs
 
 ## Endpoints

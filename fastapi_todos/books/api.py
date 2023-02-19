@@ -2,11 +2,10 @@ from typing import Any, Mapping, Optional
 
 import httpx
 from httpx import Timeout
+from loguru import logger
 
 # https://openlibrary.org/api/books?bibkeys=ISBN%3A0201558025&format=json&jscmd=data
 BASE_URL = "https://openlibrary.org/api/books"
-
-from loguru import logger
 
 
 class BooksApi:

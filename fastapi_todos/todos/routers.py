@@ -10,7 +10,8 @@ todos_router = APIRouter()
 db = TodoDB()
 
 not_found_response = JSONResponse(
-    status_code=404, content={"message": "TODO not found"}
+    status_code=404,
+    content={"message": "TODO not found"},
 )
 
 
@@ -26,8 +27,7 @@ async def get_todo(todo_id: int, response: Response):
     if not todo_item:
         logger.warning(" Todo item Not found {}", todo_id)
         return not_found_response
-    else:
-        return todo_item
+    return todo_item
 
 
 @todos_router.post(
@@ -53,17 +53,17 @@ async def update_todo(todo_id: int, item: TodoItem, response: Response):
     if not todo_item:
         logger.warning(" Not found Todo {} ", todo_id)
         return not_found_response
-    else:
-        logger.info(" Updating Todo  {}", todo_id)
-        return todo_item
+    logger.info(" Updating Todo  {}", todo_id)
+    return todo_item
 
 
 @todos_router.delete(
-    "/{todo_id}", tags=["todos"], status_code=status.HTTP_204_NO_CONTENT
+    "/{todo_id}",
+    tags=["todos"],
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_todo(todo_id: int, response: Response):
     todo_item_id = await db.remove_todo(todo_id)
     if not todo_item_id:
         return not_found_response
-    else:
-        return None
+    return None

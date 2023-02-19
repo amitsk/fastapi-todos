@@ -32,16 +32,11 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint: ## check style with flake8
-	$(PDM) run pyflakes fastapi_todos/ tests
-	$(PDM)  run mypy  fastapi_todos/
-	$(PDM)  run pytype  fastapi_todos/
-
-pytype:
-	$(PDM)  -d import-error fastapi_todos/
+lint:
+	$(PDM) run ruff fastapi_todos/
 
 mypy:
-	$(PDM)   --namespace-packages fastapi_todos/
+	- $(PDM) run mypy  --namespace-packages fastapi_todos/
 
 
 test: ## run tests quickly with the default Python

@@ -4,9 +4,10 @@
 
 import json
 import logging
-import sys
-from loguru import logger
 import os
+import sys
+
+from loguru import logger
 
 
 class InterceptHandler(logging.Handler):
@@ -24,7 +25,8 @@ class InterceptHandler(logging.Handler):
             depth += 1
 
         logger.opt(depth=depth, exception=record.exc_info).log(
-            level, record.getMessage()
+            level,
+            record.getMessage(),
         )
 
 
@@ -53,7 +55,8 @@ def serialize(record):
 
 
 def format_record(record):
-    # Note this function returns the string to be formatted, not the actual message to be logged
+    # Note this function returns the string to be formatted,
+    # not the actual message to be logged
     record["extra"]["serialized"] = serialize(record)
     return "{extra[serialized]}\n"
 
@@ -65,13 +68,10 @@ def init_logging():
     WARNING!
     if you call the init_logging in startup event function,
     then the first logs before the application start will be in the old format
-    >>> app.add_event_handler("startup", init_logging)
+     app.add_event_handler("startup", init_logging)
     stdout:
     INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-    INFO:     Started reloader process [11528] using statreload
-    INFO:     Started server process [6036]
     INFO:     Waiting for application startup.
-    2020-07-25 02:19:21.357 | INFO     | uvicorn.lifespan.on:startup:34 - Application startup complete.
 
     """
 
@@ -81,7 +81,7 @@ def init_logging():
     loggers = (
         logging.getLogger(name)
         for name in logging.root.manager.loggerDict
-        if name.startswith("uvicorn.") or name.startswith("gunicorn.")
+        if name.startswith(("uvicorn.", "gunicorn."))
     )
     for uvicorn_logger in loggers:
         uvicorn_logger.handlers = []
@@ -98,6 +98,6 @@ def init_logging():
                 "level": os.environ.get("LOG_LEVEL", logging.DEBUG),
                 "format": format_record,
                 "enqueue": True,
-            }
-        ]
+            },
+        ],
     )
