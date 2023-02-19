@@ -45,11 +45,7 @@ test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"
 app="uvicorn fastapi_todos.main:app --reload"
 
 [tool.ruff]
-# Enable Pyflakes `E` and `F` codes by default.
 select = ["A", "B","C4","COM", "DTZ","ISC","E", "F", "FBT", "N", "PIE", "S", "RET", "T20"]
-
-
-# Allow autofix for all enabled rules (when `--fix`) is provided.
 
 unfixable = ["B"]
 
@@ -64,9 +60,7 @@ exclude = [
     ".venv",
     "__pypackages__",
     "_build",
-    "buck-out",
     "build",
-    "dist",
     "venv",
     "tests"
 ]
