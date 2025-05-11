@@ -1,12 +1,12 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help
 .DEFAULT_GOAL := help
 
-PDM=pdm
+UV=uv
 
 build: install test lint
 
 install: 
-	$(PDM) install -d
+	$(UV) sync --all-extras
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -33,17 +33,14 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint:
-	$(PDM) run ruff fastapi_todos/
-
-mypy:
-	- $(PDM) run mypy  --namespace-packages fastapi_todos/
+	$(UV) run ruff check src/
 
 
 test: ## run tests quickly with the default Python
-	$(PDM)  run test
+	env PYTHONPATH=./src:${PYTHONPATH} 	$(UV) run  pytest --cov=fastapi_todos tests/ --print
 
 app:
-	$(PDM) run app
+	env PYTHONPATH=./src:${PYTHONPATH} $(UV) run uvicorn fastapi_todos.main:app --reload
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source {{ cookiecutter.project_module }} -m pytest

@@ -12,8 +12,9 @@ It uses
 
 ## Building
 
-- Install Python3.11
-- Install pdm https://pdm.fming.dev/latest/
+
+- Install uv https://docs.astral.sh/uv/getting-started/installation/
+- Install Python3.13 `uv python install 3.13`
 - Clone from github
 - Build - Install, test, lint `make build`
 - Tests can be run with `make test`
@@ -30,7 +31,7 @@ It uses
 
 ## Running in Docker
 
-- Based off `python:3.11-slim`. Around 260MB image size
+- Based off `python:3.13-slim`. Around 260MB image size
 - `docker build -t fastapi/todos . `
 - `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`
 

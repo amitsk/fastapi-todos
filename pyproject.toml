@@ -1,32 +1,14 @@
-[tool]
-[tool.pdm.resolution]
-allow_prereleases = true
-
-[[tool.pdm.source]]
-name = "pypi"
-url = "https://pypi.org/simple"
-verify_ssl = true
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "black",
-    "pytest",
-    "pytest-datadir",
-    "pytest-cov",
-    "pytest-html",
-    "pytest-mock",
-    "pytest-faker",
-    "pytest-print",
-    "mypy>=1.0.1",
-    "ruff"
-]
-
 [project]
+name = "fastapi-todos"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
 # PEP 621 project metadata
 # See https://www.python.org/dev/peps/pep-0621/
-requires-python = "~=3.11"
+
 dependencies = [
-    "fastapi",
+    "fastapi[standard]",
     "requests",
     "uvicorn[standard]",
     "loguru",
@@ -35,45 +17,21 @@ dependencies = [
     "httpx[http2]",
 ]
 
+[project.scripts]
+fastapi-todos = "fastapi_todos:main"
+
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.pdm.scripts]
-test="env PYTHONPATH=.:$PYTHONPATH pytest --cov=fastapi_todos tests/ --print"
-app="uvicorn fastapi_todos.main:app --reload"
-
-[tool.ruff]
-select = ["A", "B","C4","COM", "DTZ","ISC","E", "F", "FBT", "N", "PIE", "S", "RET", "T20"]
-
-unfixable = ["B"]
-
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".mypy_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "build",
-    "venv",
-    "tests"
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "pytest-cov",
+    "pytest-datadir",
+    "pytest-faker",
+    "pytest-html",
+    "pytest-mock",
+    "pytest-print",
+    "ruff",
 ]
-
-
-# Same as Black.
-line-length = 88
-
-# Assume Python 3.11.
-target-version = "py311"
-
-[tool.ruff.mccabe]
-# Unlike Flake8, default to a complexity level of 10.
-max-complexity = 10
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["E402"]
