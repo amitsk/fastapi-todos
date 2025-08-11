@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Response, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from .db import TodoDB
@@ -47,8 +48,10 @@ async def create_todo(item: TodoItemIn):
     tags=["todos"],
     status_code=status.HTTP_200_OK,
     response_class=JSONResponse,
+    response_model=TodoItem,
 )
-async def update_todo(todo_id: int, item: TodoItem, response: Response):
+async def update_todo(todo_id: int, item: TodoItemIn):
+    logger.info(" Updating Todo  {} ", todo_id)
     todo_item = await db.update_todo(todo_id, item)
     if not todo_item:
         logger.warning(" Not found Todo {} ", todo_id)
@@ -62,7 +65,7 @@ async def update_todo(todo_id: int, item: TodoItem, response: Response):
     tags=["todos"],
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_todo(todo_id: int, response: Response):
+async def delete_todo(todo_id: int):
     todo_item_id = await db.remove_todo(todo_id)
     if not todo_item_id:
         return not_found_response
