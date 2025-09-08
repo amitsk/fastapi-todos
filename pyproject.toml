@@ -27,6 +27,7 @@ build-backend = "hatchling.build"
 [tool.uv]
 dev-dependencies = [
     "pytest",
+    "pytest-asyncio",
     "pytest-cov",
     "pytest-datadir",
     "pytest-faker",

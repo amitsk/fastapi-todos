@@ -6,7 +6,7 @@ UV=uv
 build: install test lint
 
 install: 
-	$(UV) sync --all-extras
+	$(UV) sync --dev --all-extras
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -37,7 +37,7 @@ lint:
 
 
 test: ## run tests quickly with the default Python
-	env PYTHONPATH=./src:${PYTHONPATH} 	$(UV) run  pytest --cov=fastapi_todos tests/ --print
+	env PYTHONPATH=./src:${PYTHONPATH} 	$(UV) run  python -m pytest --cov=fastapi_todos tests/ --print
 
 app:
 	env PYTHONPATH=./src:${PYTHONPATH} $(UV) run uvicorn fastapi_todos.main:app --reload
