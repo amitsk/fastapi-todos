@@ -1,27 +1,19 @@
-FROM python:3.13-slim  as base
-#https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
+# https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
+FROM python:3.13-slim AS base
 
 # Setup env
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    # Disable Python downloads; use the image interpreter in build + runtime.
+    UV_PYTHON_DOWNLOADS=0
 
-# Turns off writing .pyc files; superfluous on an ephemeral container.
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
-
-# Disable Python downloads, because we want to use the system interpreter
-# across both images. If using a managed Python version, it needs to be
-# copied from the build image into the final image; see `standalone.Dockerfile`
-# for an example.
-ENV UV_PYTHON_DOWNLOADS=0
 FROM base AS builder
 
-
-# RUN apt-get update && apt-get install -y --no-install-recommends g++
-# install UV
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
 
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -34,36 +26,23 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM base AS runtime
 
-# Extra python env
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    APP_MODULE=fastapi_todos.main:app \
+    PORT=8000 \
+    PYTHONPATH=/app/src \
+    PATH="/app/.venv/bin:$PATH"
 
-
-ENV APP_MODULE="fastapi_todos.main:app"
-ENV PORT 8000
-ENV PYTHONPATH=/home/appuser:$PYTHONPATH
-
-# Create and switch to a new user
 RUN useradd --create-home appuser
-WORKDIR /home/appuser
 
-# Copy virtual env from python-deps stage
-# It is important to use the image that matches the builder, as the path to the
-# Python executable must be the same, e.g., using `python:3.11-slim-bookworm`
-# will fail.
-
-# Copy the application from the builder
+# Copy the application (and venv) from the builder
 COPY --from=builder --chown=appuser:appuser /app /app
 
-# Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
-
-
-EXPOSE ${PORT}
-COPY start.sh .
+WORKDIR /app
+COPY --chown=appuser:appuser start.sh gunicorn.conf.py ./
 RUN chmod +x ./start.sh
-COPY gunicorn.conf.py .
+
 USER appuser
+EXPOSE 8000
 
 CMD ["./start.sh"]

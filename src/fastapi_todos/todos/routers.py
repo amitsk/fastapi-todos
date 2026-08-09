@@ -1,19 +1,12 @@
-from fastapi import APIRouter, Response, status
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
+from loguru import logger
 
 from .db import TodoDB
 from .models import TodoItem, TodoItemIn
 
-from loguru import logger
-
 todos_router = APIRouter()
 db = TodoDB()
-
-not_found_response = JSONResponse(
-    status_code=404,
-    content={"message": "TODO not found"},
-)
 
 
 @todos_router.get(
@@ -23,11 +16,11 @@ not_found_response = JSONResponse(
     response_model=TodoItem,
     response_class=JSONResponse,
 )
-async def get_todo(todo_id: int, response: Response):
+async def get_todo(todo_id: int) -> TodoItem:
     todo_item = await db.find_todo(todo_id=todo_id)
     if not todo_item:
-        logger.warning(" Todo item Not found {}", todo_id)
-        return not_found_response
+        logger.warning("Todo item not found {}", todo_id)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TODO not found")
     return todo_item
 
 
@@ -38,8 +31,8 @@ async def get_todo(todo_id: int, response: Response):
     response_model=TodoItem,
     response_class=JSONResponse,
 )
-async def create_todo(item: TodoItemIn):
-    logger.info(" Creating Todo  ")
+async def create_todo(item: TodoItemIn) -> TodoItem:
+    logger.info("Creating Todo")
     return await db.add_todo(item)
 
 
@@ -50,13 +43,12 @@ async def create_todo(item: TodoItemIn):
     response_class=JSONResponse,
     response_model=TodoItem,
 )
-async def update_todo(todo_id: int, item: TodoItemIn):
-    logger.info(" Updating Todo  {} ", todo_id)
+async def update_todo(todo_id: int, item: TodoItemIn) -> TodoItem:
+    logger.info("Updating Todo {}", todo_id)
     todo_item = await db.update_todo(todo_id, item)
     if not todo_item:
-        logger.warning(" Not found Todo {} ", todo_id)
-        return not_found_response
-    logger.info(" Updating Todo  {}", todo_id)
+        logger.warning("Todo not found {}", todo_id)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TODO not found")
     return todo_item
 
 
@@ -65,8 +57,7 @@ async def update_todo(todo_id: int, item: TodoItemIn):
     tags=["todos"],
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_todo(todo_id: int):
+async def delete_todo(todo_id: int) -> None:
     todo_item_id = await db.remove_todo(todo_id)
     if not todo_item_id:
-        return not_found_response
-    return None
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TODO not found")
