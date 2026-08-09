@@ -1,56 +1,62 @@
 # API - fastapi-todos
 
-This is a demo project for building an API using FastAPI https://fastapi.tiangolo.com/
+Demo project for building an API with [FastAPI](https://fastapi.tiangolo.com/).
 
-It uses
+## Stack
 
-- Fast API - https://fastapi.tiangolo.com/
-- Pydantic - https://pydantic-docs.helpmanual.io/usage/models/
-- uvicorn https://github.com/encode/uvicorn
-- TinyDB https://github.com/msiemens/tinydb
-- Gunicorn https://gunicorn.org/
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Pydantic](https://docs.pydantic.dev/)
+- [Uvicorn](https://www.uvicorn.org/) / [Gunicorn](https://gunicorn.org/)
+- [TinyDB](https://github.com/msiemens/tinydb) (todos persistence)
+- [HTTPX](https://www.python-httpx.org/) (Open Library books client)
+- [Loguru](https://loguru.readthedocs.io/) (JSON logging)
+- [uv](https://docs.astral.sh/uv/) (package management)
 
 ## Building
 
-
-- Install uv https://docs.astral.sh/uv/getting-started/installation/
-- Install Python3.13 `uv python install 3.13`
-- Clone from github
-- Build - Install, test, lint `make build`
-- Tests can be run with `make test`
+- Install uv: https://docs.astral.sh/uv/getting-started/installation/
+- Install Python 3.13: `uv python install 3.13`
+- Clone the repo
+- Install, test, and lint: `make build`
+- Tests only: `make test`
 
 ## Running APIs
 
-- After build is done run `make app`
-- Navigate to http://127.0.0.1:8000/docs to view the Open API docs
+- After build: `make app`
+- OpenAPI docs: http://127.0.0.1:8000/docs
+- Health check: http://127.0.0.1:8000/health
 
 ## Endpoints
 
-- todos : http://127.0.0.1:8000/todos => CRUD endpoints agaist In-Memory TinyDB
-- books : http://127.0.0.1:8000/books => Get a book's details by ISBN. Uses aiohttp to call OpenAPI
+| Path | Description |
+|------|-------------|
+| `/todos` | CRUD against a local TinyDB file (`db.json`) |
+| `/books/{isbn}` | Book details by ISBN via [Open Library API](https://openlibrary.org/dev/docs/api/books) |
+| `/health` | Liveness probe |
 
 ## Running in Docker
 
-- Based off `python:3.13-slim`. Around 260MB image size
-- `docker build -t fastapi/todos . `
-- `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`
+- Base image: `python:3.13-slim` (multi-stage with uv)
+- Build: `docker build -t fastapi/todos .`
+- Run: `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`
 
 ## Configuration
 
-- `gunicorn.conf.py`
-
-## Json Logging using Loguru
-
-- `custom_logging.py`
+- Gunicorn: `gunicorn.conf.py` (bind, workers, timeouts; env overrides)
+- Logging: `src/fastapi_todos/custom_logging.py` (Loguru JSON)
+- Useful env vars: `PORT`, `LOG_LEVEL`, `WEB_CONCURRENCY`, `WORKERS_PER_CORE`, `TIMEOUT`
 
 ## Kubernetes
 
-- Working installations of `minikube` and `kubectl`
-- In a terminal `eval $(minikube -p minikube docker-env)`
-- Build docker image
-- `minikube start`
-- Switch to `deployments/k8s`
-- `kubectl create -f deployments.yaml`
-- `kubectl create -f service.yaml`
-- URL = `minikube service --url fastapi-todos-svc`
-- Access the swagger console at <URL>/docs
+Requires working `minikube` and `kubectl`.
+
+```bash
+eval $(minikube -p minikube docker-env)
+minikube start
+docker build -t fastapi/todos .
+kubectl apply -f deployments/k8s/deployments.yaml
+kubectl apply -f deployments/k8s/service.yaml
+minikube service --url fastapi-todos-svc
+```
+
+Open `<URL>/docs` for Swagger UI.

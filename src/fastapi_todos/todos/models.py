@@ -1,15 +1,14 @@
-from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TodoItemIn(BaseModel):
-    name: str
-    description: Optional[str] = None
-    completed: bool
+    name: str = Field(min_length=1)
+    description: str | None = None
+    completed: bool = False
 
 
 class TodoItem(BaseModel):
     todo_id: int
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     completed: bool

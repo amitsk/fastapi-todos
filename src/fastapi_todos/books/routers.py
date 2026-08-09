@@ -1,18 +1,11 @@
-from fastapi import APIRouter, Response, status
-
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
-
-from .models import Book
 from .api import BooksApi
+from .models import Book
 
 books_router = APIRouter()
 books_api = BooksApi()
-
-not_found_response = JSONResponse(
-    status_code=404,
-    content={"message": "Book not found"},
-)
 
 
 @books_router.get(
@@ -22,8 +15,8 @@ not_found_response = JSONResponse(
     response_model=Book,
     response_class=JSONResponse,
 )
-async def get_book(isbn: str, response: Response):
+async def get_book(isbn: str) -> Book:
     book = await books_api.fetch_book_details(isbn)
     if not book:
-        return not_found_response
-    return book
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+    return Book.model_validate(book)

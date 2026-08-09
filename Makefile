@@ -1,12 +1,12 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build help install build lint typecheck test app coverage
 .DEFAULT_GOAL := help
 
 UV=uv
 
-build: install test lint
+build: install test lint typecheck
 
-install: 
-	$(UV) sync --dev --all-extras
+install:
+	$(UV) sync --group dev
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -31,20 +31,23 @@ clean-test: ## remove test and coverage artifacts
 	rm -f .coverage
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
+	rm -fr coverage_html_report
+	rm -fr .ruff_cache
+	rm -fr .mypy_cache
+	rm -fr .ty_cache
 
-lint:
-	$(UV) run ruff check src/
+lint: ## run ruff linter
+	$(UV) run ruff check src/ tests/
 
+typecheck: ## run ty type checker
+	$(UV) run ty check src/
 
-test: ## run tests quickly with the default Python
-	env PYTHONPATH=./src:${PYTHONPATH} 	$(UV) run  python -m pytest --cov=fastapi_todos tests/ --print
+test: ## run tests with coverage
+	$(UV) run python -m pytest --cov=fastapi_todos tests/ --print
 
-app:
-	env PYTHONPATH=./src:${PYTHONPATH} $(UV) run uvicorn fastapi_todos.main:app --reload
+app: ## run the API with auto-reload
+	$(UV) run uvicorn fastapi_todos.main:app --reload --app-dir src
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source {{ cookiecutter.project_module }} -m pytest
-	coverage report -m
-	coverage html
-
-
+coverage: ## write HTML coverage report
+	$(UV) run python -m pytest --cov=fastapi_todos --cov-report=html:coverage_html_report tests/
+	@echo "Open coverage_html_report/index.html"

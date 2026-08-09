@@ -1,26 +1,30 @@
 # Custom Logger Using Loguru
 # https://loguru.readthedocs.io/en/stable/api/logger.html
 
+from __future__ import annotations
 
 import json
 import logging
 import os
 import sys
+from types import FrameType
+from typing import Any, cast
 
 from loguru import logger
 
 
 class InterceptHandler(logging.Handler):
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord) -> None:
         # Get corresponding Loguru level if it exists
         try:
-            level = logger.level(record.levelname).name
+            level: str | int = logger.level(record.levelname).name
         except ValueError:
             level = record.levelno
 
         # Find caller from where originated the logged message
-        frame, depth = logging.currentframe(), 2
-        while frame.f_code.co_filename == logging.__file__:
+        frame: FrameType | None = logging.currentframe()
+        depth = 2
+        while frame is not None and frame.f_code.co_filename == logging.__file__:
             frame = frame.f_back
             depth += 1
 
@@ -31,17 +35,18 @@ class InterceptHandler(logging.Handler):
 
 
 # https://loguru.readthedocs.io/en/stable/api/logger.html
-def serialize(record):
+def serialize(record: dict[str, Any]) -> str:
+    exception = record["exception"]
     subset = {
         "timestamp": record["time"].isoformat(),
         "level": record["level"].name,
         "message": record["message"],
         "elapsed_sec": record["elapsed"].total_seconds(),
-        "exception": record["exception"]
+        "exception": exception
         and {
-            "type": record["exception"].type.__name__,
-            "value": record["exception"].value,
-            "traceback": bool(record["exception"]),
+            "type": exception.type.__name__,
+            "value": exception.value,
+            "traceback": bool(exception),
         },
         "extra": record["extra"],
         "file": {"name": record["file"].name},
@@ -54,14 +59,14 @@ def serialize(record):
     return json.dumps(subset)
 
 
-def format_record(record):
+def format_record(record: dict[str, Any]) -> str:
     # Note this function returns the string to be formatted,
     # not the actual message to be logged
     record["extra"]["serialized"] = serialize(record)
     return "{extra[serialized]}\n"
 
 
-def init_logging():
+def init_logging() -> None:
     """
     Replaces logging handlers with a handler for using the custom handler.
 
@@ -75,9 +80,8 @@ def init_logging():
 
     """
 
-    # disable handlers for specific uvicorn loggers
+    # disable handlers for specific uvicorn/gunicorn loggers
     # to redirect their output to the default uvicorn logger
-    # works with uvicorn==0.11.6
     loggers = (
         logging.getLogger(name)
         for name in logging.root.manager.loggerDict
@@ -89,15 +93,20 @@ def init_logging():
     # change handler for default uvicorn logger
     intercept_handler = InterceptHandler()
     logging.getLogger("uvicorn").handlers = [intercept_handler]
+    logging.getLogger("gunicorn").handlers = [intercept_handler]
 
+    log_level: str | int = os.environ.get("LOG_LEVEL", logging.DEBUG)
     # set logs output, level and format
     logger.configure(
-        handlers=[
-            {
-                "sink": sys.stdout,
-                "level": os.environ.get("LOG_LEVEL", logging.DEBUG),
-                "format": format_record,
-                "enqueue": True,
-            },
-        ],
+        handlers=cast(
+            Any,
+            [
+                {
+                    "sink": sys.stdout,
+                    "level": log_level,
+                    "format": format_record,
+                    "enqueue": True,
+                },
+            ],
+        ),
     )

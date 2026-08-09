@@ -1,7 +1,6 @@
-from typing import Any, Dict, List
-from pydantic import BaseModel
+from typing import Any
 
-#
+from pydantic import BaseModel
 
 
 class Author(BaseModel):
@@ -20,11 +19,11 @@ class Subject(BaseModel):
 
 class Book(BaseModel):
     isbn: str
-    subtitle: str
+    subtitle: str | None = None
     url: str
     title: str
-    identifiers: Dict[str, Any]
-    publishers: List[Publisher]
-    authors: List[Author]
-    subjects: List[Subject]
-    publish_date: str
+    identifiers: dict[str, Any] = {}
+    publishers: list[Publisher] = []
+    authors: list[Author] = []
+    subjects: list[Subject] = []
+    publish_date: str | None = None

@@ -1,7 +1,7 @@
 [project]
 name = "fastapi-todos"
 version = "0.1.0"
-description = "Add your description here"
+description = "Demo FastAPI project with Todos (TinyDB) and Books (Open Library) APIs"
 readme = "README.md"
 requires-python = ">=3.13"
 # PEP 621 project metadata
@@ -9,7 +9,6 @@ requires-python = ">=3.13"
 
 dependencies = [
     "fastapi[standard]",
-    "requests",
     "uvicorn[standard]",
     "loguru",
     "tinydb",
@@ -18,14 +17,14 @@ dependencies = [
 ]
 
 [project.scripts]
-fastapi-todos = "fastapi_todos:main"
+fastapi-todos = "fastapi_todos.main:run"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest",
     "pytest-asyncio",
     "pytest-cov",
@@ -34,5 +33,37 @@ dev-dependencies = [
     "pytest-html",
     "pytest-mock",
     "pytest-print",
+    "respx>=0.23.1",
     "ruff",
+    "ty>=0.0.69",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.coverage.run]
+branch = true
+source = ["fastapi_todos"]
+omit = ["*/custom_logging.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+
+[tool.ty.environment]
+python-version = "3.13"
+root = ["./src"]
+
+[tool.ty.src]
+include = ["src"]
