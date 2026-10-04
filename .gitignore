@@ -129,8 +129,9 @@ dmypy.json
 .pyre/
 
 .vscode/
-#  Temp file
+#  Temp files
 db.json
+db.json.lock
 
 # Linters 
 **/*.pyi

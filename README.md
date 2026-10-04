@@ -9,13 +9,14 @@ Demo project for building an API with [FastAPI](https://fastapi.tiangolo.com/).
 - [Uvicorn](https://www.uvicorn.org/) / [Gunicorn](https://gunicorn.org/)
 - [TinyDB](https://github.com/msiemens/tinydb) (todos persistence)
 - [HTTPX](https://www.python-httpx.org/) (Open Library books client)
-- [Loguru](https://loguru.readthedocs.io/) (JSON logging)
+- [HTTPX2](https://pypi.org/project/httpx2/) (used by Starlette's `TestClient` in tests)
+- Standard library `logging` (structured JSON output)
 - [uv](https://docs.astral.sh/uv/) (package management)
 
 ## Building
 
 - Install uv: https://docs.astral.sh/uv/getting-started/installation/
-- Install Python 3.13: `uv python install 3.13`
+- Install Python 3.14: `uv python install 3.14`
 - Clone the repo
 - Install, test, and lint: `make build`
 - Tests only: `make test`
@@ -36,14 +37,14 @@ Demo project for building an API with [FastAPI](https://fastapi.tiangolo.com/).
 
 ## Running in Docker
 
-- Base image: `python:3.13-slim` (multi-stage with uv)
+- Base image: `python:3.14-slim` (multi-stage with uv)
 - Build: `docker build -t fastapi/todos .`
 - Run: `docker run --name todos-container -p 8000:8000 --rm -d fastapi/todos`
 
 ## Configuration
 
 - Gunicorn: `gunicorn.conf.py` (bind, workers, timeouts; env overrides)
-- Logging: `src/fastapi_todos/custom_logging.py` (Loguru JSON)
+- Logging: `src/fastapi_todos/custom_logging.py` (stdlib `logging` with a JSON formatter)
 - Useful env vars: `PORT`, `LOG_LEVEL`, `WEB_CONCURRENCY`, `WORKERS_PER_CORE`, `TIMEOUT`
 
 ## Kubernetes

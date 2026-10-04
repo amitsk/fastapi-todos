@@ -3,17 +3,19 @@ name = "fastapi-todos"
 version = "0.1.0"
 description = "Demo FastAPI project with Todos (TinyDB) and Books (Open Library) APIs"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 # PEP 621 project metadata
 # See https://www.python.org/dev/peps/pep-0621/
 
 dependencies = [
     "fastapi[standard]",
     "uvicorn[standard]",
-    "loguru",
     "tinydb",
     "gunicorn",
     "httpx[http2]",
+    # Starlette's TestClient prefers httpx2 and warns when only httpx is
+    # installed. The app itself still calls httpx (see books/api.py).
+    "httpx2[http2]",
 ]
 
 [project.scripts]
@@ -45,7 +47,7 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 line-length = 100
 src = ["src", "tests"]
 
@@ -62,7 +64,7 @@ show_missing = true
 skip_empty = true
 
 [tool.ty.environment]
-python-version = "3.13"
+python-version = "3.14"
 root = ["./src"]
 
 [tool.ty.src]

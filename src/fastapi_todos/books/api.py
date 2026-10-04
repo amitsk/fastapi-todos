@@ -1,9 +1,11 @@
+import logging
 from collections.abc import Mapping
 from typing import Any
 
 import httpx
 from httpx import Timeout
-from loguru import logger
+
+logger = logging.getLogger(__name__)
 
 # https://openlibrary.org/api/books?bibkeys=ISBN%3A0201558025&format=json&jscmd=data
 BASE_URL = "https://openlibrary.org/api/books"
@@ -22,5 +24,5 @@ class BooksApi:
                 if book is not None:
                     return {**book, "isbn": isbn}
 
-            logger.info("No record found for ISBN {}", isbn)
+            logger.info("No record found for ISBN %s", isbn)
             return None

@@ -1,9 +1,12 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
-from loguru import logger
 
 from .db import TodoDB
 from .models import TodoItem, TodoItemIn
+
+logger = logging.getLogger(__name__)
 
 todos_router = APIRouter()
 db = TodoDB()
@@ -19,7 +22,7 @@ db = TodoDB()
 async def get_todo(todo_id: int) -> TodoItem:
     todo_item = await db.find_todo(todo_id=todo_id)
     if not todo_item:
-        logger.warning("Todo item not found {}", todo_id)
+        logger.warning("Todo item not found %s", todo_id)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TODO not found")
     return todo_item
 
@@ -44,10 +47,10 @@ async def create_todo(item: TodoItemIn) -> TodoItem:
     response_model=TodoItem,
 )
 async def update_todo(todo_id: int, item: TodoItemIn) -> TodoItem:
-    logger.info("Updating Todo {}", todo_id)
+    logger.info("Updating Todo %s", todo_id)
     todo_item = await db.update_todo(todo_id, item)
     if not todo_item:
-        logger.warning("Todo not found {}", todo_id)
+        logger.warning("Todo not found %s", todo_id)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TODO not found")
     return todo_item
 

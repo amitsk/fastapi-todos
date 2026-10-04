@@ -1,0 +1,43 @@
+# Version control
+.git
+.gitignore
+
+# Python build / cache artifacts
+__pycache__
+*.py[cod]
+*.egg-info
+build
+dist
+.venv
+venv
+env
+
+# Tool caches
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.ty_cache
+.idea
+.vscode
+
+# Test and coverage output
+.coverage
+.coverage.*
+htmlcov
+coverage_html_report
+.pytest_cache
+.tox
+
+# Local runtime state: the container writes its own db.json
+db.json
+db.json.lock
+
+# Deployment manifests are applied with kubectl, not baked into the image
+deployments
+
+# Tooling config not needed to install the package. README.md and LICENSE are
+# deliberately kept: hatchling reads `readme` from pyproject.toml at build time.
+Makefile
+mise.toml
+Dockerfile
+.dockerignore

@@ -1,5 +1,5 @@
 # https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
-FROM python:3.13-slim AS base
+FROM python:3.14-slim AS base
 
 # Setup env
 ENV LANG=C.UTF-8 \
@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-install-project --no-dev
-ADD . /app
+COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
@@ -39,10 +39,13 @@ RUN useradd --create-home appuser
 COPY --from=builder --chown=appuser:appuser /app /app
 
 WORKDIR /app
-COPY --chown=appuser:appuser start.sh gunicorn.conf.py ./
+# start.sh and gunicorn.conf.py arrived with /app; just make the script runnable.
 RUN chmod +x ./start.sh
 
 USER appuser
 EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
 
 CMD ["./start.sh"]
